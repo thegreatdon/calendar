@@ -1,0 +1,89 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html>
+<head>
+	<title>Untitled</title>
+<style type="text/css">
+.dayspn{display:inline;border-right:1px solid red;border-bottom:1px solid red;background-color:pink;}
+#monDwn{cursor:pointer;}
+#monUp{cursor:pointer;}
+</style>
+<script src="/jquery/jquery-1.9.1.min.js"></script>
+<script>
+$(document).ready(function(){
+var weekDays = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+var fullMonth = ['January','February','March','April','May','June','July','August','September','October','November','December']
+
+var today = new Date();
+var dd = today.getDate();
+var mm = today.getMonth(); //January is 0!
+//var mm = 11;
+var yyyy = today.getFullYear();
+if(dd<10) {
+    dd='0'+dd
+} 
+
+
+
+	mkeCal = function(yyyy,mm){
+		var cal = new Array();
+			//if(mm<10){mm='0'+mm} 
+
+		var firstRow = fullMonth[mm] + yyyy+"<br/>";
+		cal.push(firstRow);
+		var row = 0;
+		for(c=1;c<=31;c++){
+			row = row +1;
+			//calDat = new Date(yyyy,mm,c);
+			calDat = new Date(yyyy,mm,c);
+			calMon = calDat.getMonth();
+			calMonDsp = calDat.getMonth()+1;
+			calDay = weekDays[calDat.getDay()];
+			td = "<div class='dayspn'>"+row+"]"+calDay+"/"+calMonDsp+"/"+calDat.getDate()+"</div>";
+			
+			if(c == 1 && calDay != 'Sunday'){
+				dayback = calDat.getDay()-1;
+				dazeback = calDat.getDate() - calDat.getDay();
+				bakDay = new Date(yyyy,mm,dazeback);
+				for(pre=0;pre<=dayback;pre++){
+					row = row +1;
+					mkePreDat = bakDay.getDate() + pre;
+					preDat = new Date(yyyy,bakDay.getMonth(),mkePreDat);
+					preDay = weekDays[preDat.getDay()];
+					preMonDsp = preDat.getMonth()+1;
+					pd = "<div class='dayspn'>"+row+"]"+preDay+"/"+preMonDsp+"/"+preDat.getDate()+"</div>";
+					cal.push(pd);
+				}
+			}
+			if(row == 7){cal.push(td,'<br>');row = 0;}
+			else{cal.push(td);}
+		}
+		$("#dbgdiv").html(cal);
+	}
+
+	$("#monUp").click(function(){ 
+	mm+=1;
+	if(mm>11){yyyy+=1;mm=0;}
+	mkeCal(yyyy,mm);
+	});	
+	
+	$("#monDwn").click(function(){ 
+	mm-=1;
+	if(mm<0){yyyy-=1;mm=11;}
+	mkeCal(yyyy,mm);
+	});	
+	
+	
+	mkeCal(yyyy,mm);
+	
+	
+});
+</script>
+
+</head>
+
+<body>
+<span name="monDwn" id="monDwn">monDwn</span>|<span name="monUp" id="monUp">monUp</span><br/>
+<div id="dbgdiv"></div>
+</body>
+</html>
